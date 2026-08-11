@@ -11,10 +11,10 @@
 - Top-of-README screenshot: `docs/qa/readme-top.jpg`.
 - Browser Debug focused screenshot: `docs/qa/readme-debug.jpg`.
 - Live GitHub top screenshot: `docs/qa/readme-live-top.jpg`.
-- Live GitHub Debug screenshot: `docs/qa/readme-live-debug.jpg`.
 - CSS viewport and screenshot pixels: 1200 × 900, device scale factor 1.
 - State: GitHub-style light-theme README rendering, agentic-browser positioning state and Browser Debug section.
 - Browser recording: `/Users/xufan/.config/browser-harness/agent-workspace/recordings/omniwebbench-agentic-browser-final-local`.
+- Live browser recording: `/Users/xufan/.config/browser-harness/agent-workspace/recordings/omniwebbench-agentic-browser-live-final`.
 
 **Full-view comparison evidence**
 
@@ -50,6 +50,7 @@
 - Desktop document overflow: 0 px.
 - No page or asset-load errors were observed during the final browser recording.
 - Local narrative check: primary image natural width 1280 px, positioning heading present, comparison-name scan clean, Browser Debug section present, Five-minute start present, and document overflow 0 px.
+- Live GitHub check: commit `57cf570` rendered, primary image natural width 1280 px, positioning heading and Browser Debug section present, comparison-name scan clean, 6 native GitHub alerts rendered, and the repository About description identifies agentic browsers as the unit under test.
 
 **Comparison history**
 
