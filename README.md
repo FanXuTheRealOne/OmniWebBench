@@ -13,6 +13,8 @@
 
 <p align="center"><strong>A capability-first, evidence-grounded benchmark for general-purpose web agents.</strong></p>
 
+<p align="center"><a href="https://fanxutherealone.github.io/OmniWebBench/"><strong>Explore the interactive benchmark overview →</strong></a></p>
+
 OmniWebBench evaluates what an agent **did in the browser**, not merely what it said it did. Every scored claim must resolve to an observable checkpoint: an instrumented server event, final application state, URL, artifact, network record, console record, visual evidence, or executable test.
 
 The project is agent- and framework-neutral. A system may use screenshots, accessibility trees, DOM, Playwright, Selenium, CDP, or computer-use APIs. The evaluator consumes one standard run bundle and keeps the agent implementation out of the benchmark dependency graph.
