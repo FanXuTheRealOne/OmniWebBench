@@ -1,14 +1,14 @@
 <p align="center">
-  <img src="assets/hero.png" alt="Matisse-inspired paper-cut botanical artwork for OmniWebBench" width="100%">
+  <img src="assets/social-preview.png" alt="OmniWebBench — 100 runnable agentic-browser tasks across six tracks" width="100%">
 </p>
 
-<h1 align="center">OmniWebBench</h1>
+<h1 align="center">A benchmark built specifically for agentic browsers.</h1>
 
-<p align="center"><strong>Measure what web agents actually do.</strong></p>
+<p align="center"><strong>Browse real websites · take actions · recover from failures · prove the outcome</strong></p>
 
 <p align="center">
-  A capability-first, evidence-grounded benchmark for browser agents and coding agents.<br>
-  Every pass must be backed by observable browser state, not a model's claim that it finished.
+  OmniWebBench measures the complete browser loop—from understanding a page to leaving behind verifiable evidence.<br>
+  Every pass is grounded in observable browser state, not a model's claim that it finished.
 </p>
 
 <p align="center">
@@ -24,7 +24,7 @@
   &nbsp;·&nbsp;
   <a href="#what-it-measures"><strong>Coverage</strong></a>
   &nbsp;·&nbsp;
-  <a href="#coding-agent--browser-debug-track"><strong>Coding &amp; Debug</strong></a>
+  <a href="#browser-debug-and-recovery"><strong>Debug &amp; Recovery</strong></a>
   &nbsp;·&nbsp;
   <a href="#evaluation-contract"><strong>Evaluation contract</strong></a>
   &nbsp;·&nbsp;
@@ -35,9 +35,12 @@
 
 ---
 
-OmniWebBench evaluates what an agent **did in the browser**, not merely what it said it did. Every scored claim must resolve to an observable checkpoint: an instrumented server event, final application state, URL, artifact, network record, console record, visual evidence, or executable test.
+OmniWebBench evaluates **browser agency**: whether an agent can perceive a real webpage, navigate it, operate its controls, manage changing state, recover when the web behaves unexpectedly, and verify the final outcome. Every scored claim must resolve to an observable checkpoint: an instrumented server event, final application state, URL, artifact, network record, console record, visual evidence, or executable test.
 
-The project is agent- and framework-neutral. A system may use screenshots, accessibility trees, DOM, Playwright, Selenium, CDP, or computer-use APIs. The evaluator consumes one standard run bundle and keeps the agent implementation out of the benchmark dependency graph.
+The benchmark is framework-neutral. An agentic browser may use screenshots, accessibility trees, DOM, CDP, Playwright, Selenium, or computer-use APIs. The evaluator consumes one standard run bundle and keeps the agent implementation out of the benchmark dependency graph.
+
+> [!NOTE]
+> **The unit under test is the agentic browser.** OmniWebBench measures its ability to browse, act, recover and verify across web workflows. Research, file handling, safety and browser debugging are capability slices inside that browser loop.
 
 > [!IMPORTANT]
 > **100 means runnable now—not a roadmap number.** v0.2 ships 100 deterministic public development tasks across six tracks, plus schemas, a fixture server, scorer, reports, and governance contract. The original 24-task v0.1 pack remains immutable for regression comparison. `verified` and hidden `test` splits only open after independent audits and baseline calibration.
@@ -57,30 +60,19 @@ The project is agent- and framework-neutral. A system may use screenshots, acces
 > [!WARNING]
 > During evaluation, the agent must not read the event ledger, task source, evaluator implementation, hidden oracle data, or fixture state APIs. Those belong to the evaluator trust boundary.
 
-## Why another benchmark?
+## What OmniWebBench is for
 
-Existing benchmarks answer different, important questions:
+An agentic browser is more than a page-answering model. It must turn intent into reliable action inside a changing web environment. OmniWebBench makes that browser loop measurable:
 
-| Benchmark | Best at | Gap OmniWebBench targets |
-|---|---|---|
-| [WebArena](https://github.com/web-arena-x/webarena) / [WebArena Verified](https://github.com/ServiceNow/webarena-verified) | Reproducible stateful tasks and executable evaluators | Cross-suite capability diagnosis, safety, recovery, evidence and debugging |
-| [VisualWebArena](https://github.com/web-arena-x/visualwebarena) | Visually grounded browser tasks | Modality attribution and fine-grained process failure labels |
-| [BrowserGym](https://github.com/ServiceNow/BrowserGym) / [AgentLab](https://github.com/ServiceNow/AgentLab) | Standardized environments and scalable experimentation | A benchmark contract rather than an agent runtime |
-| [Online-Mind2Web](https://github.com/OSU-NLP-Group/Online-Mind2Web) | Live-web generalization | Deterministic replay, mutation oracles, safety and debugging |
-| [WorkArena](https://github.com/ServiceNow/WorkArena) | Enterprise knowledge work and compositional planning | Broad website primitives and open adapter protocol |
-| [ST-WebAgentBench](https://github.com/segev-shlomov/ST-WebAgentBench) | Completion under safety policy | General capability coverage and web debugging |
-| [SWE-bench](https://github.com/swe-bench/SWE-bench) | Reproducible issue-level software engineering evaluation | Browser-specific state, trajectory and evidence semantics |
+| Browser stage | What the benchmark asks |
+|---|---|
+| Understand | Can the agent ground text, controls, visuals and page structure correctly? |
+| Navigate | Can it move through tabs, frames, pagination, dynamic content and multi-step flows? |
+| Act | Can it enter data, manipulate controls, upload/download files and complete stateful workflows? |
+| Recover | Can it respond to timeouts, transient failures, unsafe instructions and unexpected page states? |
+| Verify | Can it inspect the final URL, application state, artifacts, Console/Network evidence and visual result? |
 
-OmniWebBench borrows the strongest evaluation ideas rather than copying any one task set:
-
-- **From SWE-bench:** immutable instance IDs, pinned environments, fail-to-pass plus pass-to-pass thinking, gold verification, audited subsets, and reproducible submission artifacts.
-- **From WebArena Verified:** executable state evaluators, structured agent responses, task revisions, checksummed evidence, and offline reevaluation.
-- **From WebSuite:** atomic capability probes that explain *why* an end-to-end task failed.
-- **From WorkArena++:** compositional and long-horizon workflows.
-- **From Online-Mind2Web:** live-web validity audits and repeated runs.
-- **From ST-WebAgentBench and WASP:** completion-under-policy, prompt-injection resistance, safe deferral, and explicit unsafe-action metrics.
-
-See [Benchmark landscape](docs/benchmark-landscape.md) for the source-by-source design review.
+The result is both an overall browser-agent score and a diagnostic map of where the browser loop failed. Coverage is reported by capability, track and difficulty rather than being hidden behind one aggregate number.
 
 ## What it measures
 
@@ -109,12 +101,12 @@ Coverage is reported by capability and difficulty—not hidden behind one overal
 | Stateful mutation and confirmation | 12 |
 | Safety, injection resistance and recovery | 15 |
 | Files, artifacts and structured data | 10 |
-| Coding agent, browser debugging and visual validation | 20 |
+| Browser debugging, recovery and visual validation | 20 |
 | **Total** | **100** |
 
-## Coding Agent + Browser Debug track
+## Browser Debug and recovery
 
-This is the dedicated track for coding agents that must **search the web, inspect a live page, diagnose browser-visible failures, change code or configuration, and prove the fix in the browser**. It is intentionally separate from ordinary click-completion tasks.
+This 20-task capability slice asks an agentic browser to **inspect a live page, diagnose browser-visible failures, recover or apply an allowed repair, and prove the result in the browser**. Debugging is one part of the browser loop—not the benchmark's overall identity.
 
 | Slice | Task suffixes | What the Agent must demonstrate |
 |---|---|---|
@@ -128,7 +120,7 @@ All suffixes use the `owb-dev-` prefix.
 > [!IMPORTANT]
 > A plausible code snippet is not a pass. Debug tasks require three independently checkable outputs: **root cause**, **decisive browser evidence**, and **validated result after rerun**.
 
-The track evaluates whether a coding agent can close the loop:
+The track evaluates whether an agentic browser can close the loop:
 
 ```text
 Open the real page
@@ -143,7 +135,7 @@ Open the real page
 Typical signals include HTTP 403/429 responses, CSP failures, stale caches, WebSocket upgrade failures, runtime exceptions, responsive-layout regressions and missing post-patch validation events.
 
 > [!TIP]
-> For an art-platform coding agent, use this track together with open research and visual-grounding tasks. That combination tests the complete workflow: find a suitable reference or repository, understand the page, build or repair the experience, and visually verify the result.
+> For agentic browsers embedded in creative or development products, combine this slice with open research and visual-grounding tasks. That tests the complete browser workflow: find a suitable reference, understand the page, act on the experience, and visually verify the result.
 
 ## Five-minute start
 
@@ -318,7 +310,7 @@ Leaderboard rows will carry one of three visible trust levels:
 2. `reproducible` — code, config, raw run bundle and environment digest are public and independently rerunnable.
 3. `official_verified` — executed or audited by benchmark maintainers on the frozen test split.
 
-Only `official_verified` rows are eligible for the primary leaderboard. This follows the spirit of SWE-bench Verified: quality and reproducibility outrank raw task count.
+Only `official_verified` rows are eligible for the primary leaderboard. Quality and reproducibility outrank raw task count.
 
 ## Repository map
 
