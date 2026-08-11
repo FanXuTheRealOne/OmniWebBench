@@ -10,6 +10,8 @@
 
 - Top-of-README screenshot: `docs/qa/readme-top.jpg`.
 - Coding/Debug focused screenshot: `docs/qa/readme-debug.jpg`.
+- Live GitHub top screenshot: `docs/qa/readme-live-top.jpg`.
+- Live GitHub Debug screenshot: `docs/qa/readme-live-debug.jpg`.
 - CSS viewport and screenshot pixels: 1200 × 900, device scale factor 1.
 - State: GitHub-style light-theme README rendering, top state and Coding Agent + Browser Debug section.
 - Browser recording: `/Users/xufan/.config/browser-harness/agent-workspace/recordings/omniwebbench-readme-final-qa`.
@@ -29,7 +31,7 @@
 - P0: none.
 - P1: none.
 - P2: none.
-- P3: local Grip preview shows GitHub alert markers as plain `[!IMPORTANT]` and `[!TIP]` text. This is a renderer limitation; GitHub's repository renderer supports and styles the same committed admonition syntax.
+- P3: none. The local Grip preview showed alert markers as plain text, but the final live GitHub pass confirmed all five admonitions render with GitHub's native Important, Warning and Tip treatments.
 
 **Required fidelity surfaces**
 
@@ -47,6 +49,7 @@
 - All 7 visible image resources completed with non-zero natural width.
 - Desktop document overflow: 0 px.
 - No page or asset-load errors were observed during the final browser recording.
+- Live repository check: hero natural width 2172 px, README heading present, Debug section present, Five-minute start present, and 5 native GitHub alerts rendered.
 
 **Comparison history**
 
