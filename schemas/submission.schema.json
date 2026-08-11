@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/FanXuTheRealOne/OmniWebBench/schemas/submission.schema.json",
+  "title": "OmniWebBench leaderboard submission",
+  "type": "object",
+  "required": ["schema_version", "benchmark_version", "agent", "trust_tier", "repetitions", "run_bundle_sha256", "results"],
+  "properties": {
+    "schema_version": {"const": "omniwebbench.submission.v1"},
+    "benchmark_version": {"type": "string"},
+    "agent": {"type": "object"},
+    "trust_tier": {"enum": ["self_reported", "reproducible", "official_verified"]},
+    "repetitions": {"type": "integer", "minimum": 1},
+    "run_bundle_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "results": {"type": "array", "items": {"type": "object"}},
+    "reproduction": {"type": "object"},
+    "disclosures": {"type": "object"}
+  },
+  "additionalProperties": false
+}

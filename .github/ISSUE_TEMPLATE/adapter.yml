@@ -1,0 +1,29 @@
+name: Agent adapter
+description: Propose or report support for an agent framework.
+title: "[Adapter]: "
+labels: ["type: adapter", "status: design-review"]
+body:
+  - type: input
+    id: agent
+    attributes:
+      label: Agent or framework
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Public source URL
+    validations:
+      required: true
+  - type: textarea
+    id: protocol
+    attributes:
+      label: Observation mode, action space and run-bundle mapping
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction command and sample task
+    validations:
+      required: true

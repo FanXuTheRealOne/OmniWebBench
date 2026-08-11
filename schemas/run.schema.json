@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/FanXuTheRealOne/OmniWebBench/schemas/run.schema.json",
+  "title": "OmniWebBench run bundle",
+  "type": "object",
+  "required": ["schema_version", "run_id", "task_id", "benchmark_version", "agent", "status", "trajectory", "evidence", "metrics", "environment"],
+  "properties": {
+    "schema_version": {"const": "omniwebbench.run.v1"},
+    "run_id": {"type": "string", "minLength": 3},
+    "task_id": {"type": "string", "pattern": "^owb-[a-z0-9-]+$"},
+    "benchmark_version": {"type": "string"},
+    "agent": {
+      "type": "object",
+      "required": ["name", "version", "model", "scaffold"],
+      "properties": {
+        "name": {"type": "string"},
+        "version": {"type": "string"},
+        "model": {"type": "string"},
+        "scaffold": {"type": "string"},
+        "observation_mode": {"type": "string"},
+        "action_space": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "status": {"enum": ["completed", "partial", "agent_error", "infra_invalid", "task_invalid", "waiting_human", "unsafe_abort"]},
+    "answer": {"type": "string"},
+    "trajectory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step", "action", "outcome"],
+        "properties": {
+          "step": {"type": "integer", "minimum": 0},
+          "timestamp": {"type": "number"},
+          "action": {"type": "string"},
+          "target": {"type": "string"},
+          "url": {"type": "string"},
+          "outcome": {"enum": ["success", "error", "blocked", "skipped"]}
+        },
+        "additionalProperties": true
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "final_url": {"type": "string"},
+        "final_state": {"type": "object"},
+        "server_events": {"type": "array", "items": {"type": "object"}},
+        "screenshots": {"type": "array", "items": {"type": "string"}},
+        "artifacts": {"type": "array", "items": {"type": "object"}},
+        "console": {"type": "array", "items": {"type": "object"}},
+        "network": {"type": "array", "items": {"type": "object"}}
+      },
+      "additionalProperties": true
+    },
+    "metrics": {"type": "object"},
+    "environment": {
+      "type": "object",
+      "required": ["status", "fixture_version"],
+      "properties": {
+        "status": {"enum": ["healthy", "degraded", "failed"]},
+        "fixture_version": {"type": "string"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

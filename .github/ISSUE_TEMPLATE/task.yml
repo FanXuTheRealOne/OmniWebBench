@@ -1,0 +1,51 @@
+name: Task proposal
+description: Propose a new benchmark task or capability slice.
+title: "[Task]: "
+labels: ["type: task", "status: design-review"]
+body:
+  - type: input
+    id: capability
+    attributes:
+      label: Primary capability
+      placeholder: multi_tab / recovery / web_debugging
+    validations:
+      required: true
+  - type: textarea
+    id: intent
+    attributes:
+      label: Natural-language intent
+      description: Describe the outcome, not a click path.
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment type
+      options:
+        - deterministic_fixture
+        - containerized_site
+        - live_open_web
+        - repo_and_browser
+    validations:
+      required: true
+  - type: textarea
+    id: oracle
+    attributes:
+      label: Observable oracle and negative case
+      description: Explain why a plausible wrong trajectory cannot pass.
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Side effects, credentials and safety
+    validations:
+      required: true
+  - type: checkboxes
+    id: authoring
+    attributes:
+      label: Authoring readiness
+      options:
+        - label: I can supply a gold run.
+        - label: I can supply a negative run and oracle mutation test.
+        - label: I have rights to redistribute every fixture and asset.

@@ -1,0 +1,34 @@
+name: Bug report
+description: Report a reproducible problem in the harness, fixture, schema or documentation.
+title: "[Bug]: "
+labels: ["type: bug", "status: triage"]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include credentials, cookies, signed URLs or hidden-test material.
+  - type: input
+    id: version
+    attributes:
+      label: OmniWebBench version or commit
+      placeholder: 0.1.0 / commit SHA
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include commands, task ID, expected behavior and actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python, browser and agent adapter versions.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Redacted evidence
+      description: Logs or run-bundle excerpts with secrets removed.

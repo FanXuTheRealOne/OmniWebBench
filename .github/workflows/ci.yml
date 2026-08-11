@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e '.[dev]'
+      - name: Verify generated task pack
+        run: |
+          python scripts/generate_dev_tasks.py
+          git diff --exit-code -- tasks/core-v0.1.jsonl
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: pytest
+      - run: python scripts/audit_benchmark.py
+      - name: CLI smoke test
+        run: |
+          omniwebbench doctor
+          omniwebbench validate tasks/core-v0.1.jsonl
+          omniwebbench score examples/sample-run.json --output /tmp/score.json
+          omniwebbench report examples/sample-run.json --output-dir /tmp/report
+          test -s /tmp/report/index.html

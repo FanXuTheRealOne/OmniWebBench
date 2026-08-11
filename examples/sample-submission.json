@@ -1,0 +1,27 @@
+{
+  "schema_version": "omniwebbench.submission.v1",
+  "benchmark_version": "0.1.0",
+  "agent": {
+    "name": "reference-browser-agent",
+    "version": "0.1.0",
+    "model": "example-model",
+    "scaffold": "example-scaffold",
+    "observation_mode": "accessibility_tree+screenshot",
+    "action_space": "browser_ui"
+  },
+  "trust_tier": "self_reported",
+  "repetitions": 1,
+  "run_bundle_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "results": [
+    {"task_id": "owb-dev-001", "verdict": "pass", "score": 100.0}
+  ],
+  "reproduction": {
+    "source_commit": "example-only",
+    "command": "omniwebbench score examples/sample-run.json"
+  },
+  "disclosures": {
+    "human_assistance": false,
+    "task_data_used_for_training": false,
+    "notes": "Schema example only; not a leaderboard submission."
+  }
+}

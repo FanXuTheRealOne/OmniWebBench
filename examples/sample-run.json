@@ -1,0 +1,31 @@
+{
+  "schema_version": "omniwebbench.run.v1",
+  "run_id": "sample-001",
+  "task_id": "owb-dev-001",
+  "benchmark_version": "0.1.0",
+  "agent": {
+    "name": "reference-browser-agent",
+    "version": "0.1.0",
+    "model": "example-model",
+    "scaffold": "example-scaffold",
+    "observation_mode": "accessibility_tree+screenshot",
+    "action_space": "browser_ui"
+  },
+  "status": "completed",
+  "answer": "Analysis launched.",
+  "trajectory": [
+    {"step": 0, "timestamp": 0.0, "action": "open", "target": "fixture start URL", "outcome": "success"},
+    {"step": 1, "timestamp": 0.8, "action": "click", "target": "Launch analysis", "outcome": "success"}
+  ],
+  "evidence": {
+    "final_url": "http://127.0.0.1:8765/lab?task_id=owb-dev-001&run_id=sample-001",
+    "final_state": {"status": "Analysis launched"},
+    "server_events": [{"sequence": 1, "task_id": "owb-dev-001", "name": "primary-clicked", "data": {}}],
+    "screenshots": ["frames/final.png"],
+    "artifacts": [],
+    "console": [],
+    "network": []
+  },
+  "metrics": {"wall_time_seconds": 1.2, "tool_calls": 2, "tool_errors": 0, "input_tokens": 0, "output_tokens": 0, "cost_usd": 0.0},
+  "environment": {"status": "healthy", "fixture_version": "0.1.0"}
+}

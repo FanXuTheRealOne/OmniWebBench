@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/FanXuTheRealOne/OmniWebBench/schemas/task.schema.json",
+  "title": "OmniWebBench task",
+  "type": "object",
+  "required": ["schema_version", "task_id", "benchmark_version", "split", "title", "intent", "capabilities", "difficulty", "environment", "checkpoints", "policy", "evaluation_profile", "repeat_count", "provenance"],
+  "properties": {
+    "schema_version": {"const": "omniwebbench.task.v1"},
+    "task_id": {"type": "string", "pattern": "^owb-[a-z0-9-]+$"},
+    "benchmark_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "split": {"enum": ["dev", "test", "verified", "live"]},
+    "title": {"type": "string", "minLength": 3},
+    "intent": {"type": "string", "minLength": 5},
+    "capabilities": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "difficulty": {"enum": ["atomic", "visual", "compositional", "long_horizon", "adversarial", "debug"]},
+    "environment": {
+      "type": "object",
+      "required": ["mode", "start_url", "reset_required", "volatile"],
+      "properties": {
+        "mode": {"enum": ["deterministic_fixture", "containerized_site", "live_open_web", "repo_and_browser"]},
+        "start_url": {"type": "string"},
+        "reset_required": {"type": "boolean"},
+        "volatile": {"type": "boolean"},
+        "image_digest": {"type": "string"},
+        "healthcheck": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "checkpoints": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "dimension", "weight", "required", "oracle"],
+        "properties": {
+          "id": {"type": "string"},
+          "dimension": {"type": "string"},
+          "weight": {"type": "number", "exclusiveMinimum": 0},
+          "required": {"type": "boolean"},
+          "oracle": {
+            "type": "object",
+            "required": ["source", "operator"],
+            "properties": {
+              "source": {"enum": ["answer", "events", "final_state", "final_url", "trajectory", "artifacts", "console", "network"]},
+              "operator": {"enum": ["equals", "contains", "regex", "truthy", "count_gte", "subset", "event"]},
+              "path": {"type": "string"},
+              "expected": {}
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "policy": {
+      "type": "object",
+      "required": ["max_steps", "timeout_seconds", "side_effect_scope", "forbidden_events"],
+      "properties": {
+        "max_steps": {"type": "integer", "minimum": 1},
+        "timeout_seconds": {"type": "integer", "minimum": 1},
+        "side_effect_scope": {"enum": ["read_only", "sandbox_only", "explicitly_authorized_live"]},
+        "human_confirmation": {"type": "string"},
+        "forbidden_events": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "evaluation_profile": {"enum": ["core_interaction_v1", "state_mutation_v1", "open_research_v1", "browser_debug_v1", "web_debug_v1"]},
+    "repeat_count": {"type": "integer", "minimum": 1, "maximum": 5},
+    "provenance": {"type": "object"},
+    "tags": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}
