@@ -6,8 +6,8 @@
   <a href="https://github.com/FanXuTheRealOne/OmniWebBench/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/FanXuTheRealOne/OmniWebBench/ci.yml?branch=main&style=flat-square&label=CI"></a>
   <a href="LICENSE"><img alt="Apache 2.0" src="https://img.shields.io/badge/code-Apache--2.0-111111?style=flat-square"></a>
   <a href="DATA_LICENSE.md"><img alt="Task data CC BY 4.0" src="https://img.shields.io/badge/tasks-CC%20BY%204.0-13aebb?style=flat-square"></a>
-  <img alt="Benchmark version" src="https://img.shields.io/badge/benchmark-v0.1.0-111111?style=flat-square">
-  <img alt="Public dev tasks" src="https://img.shields.io/badge/public%20dev%20tasks-24-13aebb?style=flat-square">
+  <img alt="Benchmark version" src="https://img.shields.io/badge/benchmark-v0.2.0-111111?style=flat-square">
+  <img alt="Public dev tasks" src="https://img.shields.io/badge/public%20dev%20tasks-100-13aebb?style=flat-square">
   <img alt="Python" src="https://img.shields.io/badge/python-3.11%2B-111111?style=flat-square">
 </p>
 
@@ -20,7 +20,7 @@ OmniWebBench evaluates what an agent **did in the browser**, not merely what it 
 The project is agent- and framework-neutral. A system may use screenshots, accessibility trees, DOM, Playwright, Selenium, CDP, or computer-use APIs. The evaluator consumes one standard run bundle and keeps the agent implementation out of the benchmark dependency graph.
 
 > [!IMPORTANT]
-> **v0.1 is a public developer preview.** It ships a runnable 24-task deterministic diagnostic suite, schemas, fixture server, scorer, reports, and governance contract. It does not claim a frontier leaderboard yet. The `verified` and hidden `test` splits will only open after independent task audits and baseline calibration.
+> **v0.2 is a public developer preview.** It ships a runnable 100-task deterministic suite across six tracks, schemas, fixture server, scorer, reports, and governance contract. The original 24-task v0.1 pack remains immutable for regression comparison. The `verified` and hidden `test` splits will only open after independent task audits and baseline calibration.
 
 ## Why another benchmark?
 
@@ -65,6 +65,18 @@ The public development pack exercises these capability families:
 
 Coverage is reported by capability and difficulty—not hidden behind one overall score.
 
+### v0.2 track quotas
+
+| Track | Runnable tasks |
+|---|---:|
+| Browser interaction and workflows | 25 |
+| Open research and evidence grounding | 18 |
+| Stateful mutation and confirmation | 12 |
+| Safety, injection resistance and recovery | 15 |
+| Files, artifacts and structured data | 10 |
+| Coding agent, browser debugging and visual validation | 20 |
+| **Total** | **100** |
+
 ## Quick start
 
 Requires Python 3.11+.
@@ -85,7 +97,7 @@ In a second terminal:
 
 ```bash
 source .venv/bin/activate
-omniwebbench validate tasks/core-v0.1.jsonl
+omniwebbench validate tasks/core-v0.2.jsonl
 omniwebbench score examples/sample-run.json
 omniwebbench report examples/sample-run.json --output-dir reports/sample
 open reports/sample/index.html  # macOS; use your browser elsewhere
@@ -177,7 +189,8 @@ docs/                   benchmark method and public protocols
 examples/               valid run bundle and adapter contract examples
 schemas/                task, run and submission JSON Schemas
 src/omniwebbench/       fixture server, validator, scorer and reports
-tasks/core-v0.1.jsonl   24 runnable public development tasks
+tasks/core-v0.2.jsonl   100 runnable public development tasks
+tasks/core-v0.1.jsonl   immutable 24-task regression pack
 tests/                  oracle, safety, fixture and CLI regression tests
 ```
 
@@ -196,11 +209,11 @@ Read [Benchmark integrity](docs/integrity.md), [Security](SECURITY.md), and the 
 ## Status and roadmap
 
 - [x] Versioned task/run/submission contracts
-- [x] 24-task deterministic public diagnostic suite
+- [x] 100-task deterministic public suite across six tracks
 - [x] Instrumented server events and hard-gated scoring
 - [x] JSON and self-contained HTML reports
 - [x] Safety, recovery, multi-tab, file and debug probes
-- [ ] Independent verification round for `verified-v0.1`
+- [ ] Independent verification round for `verified-v0.2`
 - [ ] Containerized stateful sites and database oracles
 - [ ] Read-only live-web research track with drift monitor
 - [ ] Repo-to-browser web debugging track with fail-to-pass/pass-to-pass tests

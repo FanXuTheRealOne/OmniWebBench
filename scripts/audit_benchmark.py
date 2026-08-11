@@ -12,7 +12,7 @@ from jsonschema import Draft202012Validator
 
 from omniwebbench.loader import load_tasks
 from omniwebbench.scoring import PROFILES
-from omniwebbench.task_factory import build_dev_tasks
+from omniwebbench.task_factory import build_dev_tasks, build_legacy_tasks
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -22,7 +22,7 @@ def _json(path: Path) -> dict:
 
 
 def main() -> int:
-    tasks_path = ROOT / "tasks/core-v0.1.jsonl"
+    tasks_path = ROOT / "tasks/core-v0.2.jsonl"
     tasks = load_tasks(tasks_path)
     schema = _json(ROOT / "schemas/task.schema.json")
     validator = Draft202012Validator(schema)
@@ -34,17 +34,35 @@ def main() -> int:
     generated = "".join(json.dumps(task, ensure_ascii=False) + "\n" for task in build_dev_tasks())
     if generated != tasks_path.read_text(encoding="utf-8"):
         errors.append("checked-in task pack differs from task_factory output")
+    legacy_path = ROOT / "tasks/core-v0.1.jsonl"
+    legacy_generated = "".join(
+        json.dumps(task, ensure_ascii=False) + "\n" for task in build_legacy_tasks()
+    )
+    if legacy_generated != legacy_path.read_text(encoding="utf-8"):
+        errors.append("immutable v0.1 task pack differs from its generator")
     if any(sum(profile["weights"].values()) != 100 for profile in PROFILES.values()):
         errors.append("one or more score profiles do not sum to 100")
     capabilities = Counter(
         capability for task in tasks.values() for capability in task["capabilities"]
     )
+    tracks = Counter(task["track"] for task in tasks.values())
+    expected_tracks = {
+        "browser_workflow": 25,
+        "open_research": 18,
+        "state_mutation": 12,
+        "safety_recovery": 15,
+        "file_data": 10,
+        "coding_debug": 20,
+    }
+    if tracks != expected_tracks:
+        errors.append(f"track quotas differ: {dict(tracks)}")
     report = {
         "status": "failed" if errors else "ok",
-        "benchmark_version": "0.1.0",
+        "benchmark_version": "0.2.0",
         "tasks": len(tasks),
         "capabilities": len(capabilities),
         "profiles": len(PROFILES),
+        "tracks": tracks,
         "task_pack_sha256": hashlib.sha256(tasks_path.read_bytes()).hexdigest(),
         "errors": errors,
     }

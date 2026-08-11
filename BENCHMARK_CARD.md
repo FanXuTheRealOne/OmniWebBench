@@ -2,7 +2,7 @@
 
 ## Summary
 
-OmniWebBench is an open, framework-neutral benchmark for agents that operate real web browsers. It separates observable task outcome from evidence quality, process compliance, reliability and safety. Version 0.1.0 is a developer preview containing 24 deterministic public tasks.
+OmniWebBench is an open, framework-neutral benchmark for agents that operate real web browsers. It separates observable task outcome from evidence quality, process compliance, reliability and safety. Version 0.2.0 is a developer preview containing 100 deterministic public tasks across six tracks.
 
 ## Intended use
 
@@ -27,7 +27,8 @@ OmniWebBench is an open, framework-neutral benchmark for agents that operate rea
 | Task schema | `omniwebbench.task.v1` | yes |
 | Run schema | `omniwebbench.run.v1` | yes |
 | Submission schema | `omniwebbench.submission.v1` | yes |
-| Dev task pack | `0.1.0` | 24 tasks |
+| Dev task pack | `0.2.0` | 100 tasks |
+| Legacy regression pack | `0.1.0` | 24 immutable tasks |
 | Verified split | not released | no |
 | Hidden test split | not released | no |
 
@@ -41,11 +42,11 @@ Primary metrics are task success and completion under policy. Diagnostic metrics
 
 ## Known limitations
 
-- The public v0.1 fixture is intentionally compact and does not represent the visual or behavioral diversity of the open web.
+- The public v0.2 fixture is deterministic and does not yet represent the full visual or behavioral diversity of the open web.
 - Event-ledger evidence is locally reproducible but not cryptographically attested in this preview.
 - No official baseline leaderboard has been calibrated yet.
 - Live-web, containerized CRUD and repo-to-browser debug tracks remain roadmap items.
-- English is the only authored language in v0.1.
+- English is the only authored task language in v0.2.
 
 ## Maintenance
 

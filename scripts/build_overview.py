@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from omniwebbench.scoring import PROFILES  # noqa: E402
 
-TASKS_PATH = ROOT / "tasks" / "core-v0.1.jsonl"
+TASKS_PATH = ROOT / "tasks" / "core-v0.2.jsonl"
 OUTPUT_PATH = ROOT / "docs" / "index.html"
 
 DIFFICULTY_LABELS = {
@@ -33,6 +33,17 @@ PROFILE_LABELS = {
     "browser_debug_v1": "浏览器诊断",
     "web_debug_v1": "端到端网页修复",
 }
+
+TRACK_LABELS = {
+    "browser_workflow": "浏览器交互与工作流",
+    "open_research": "开放网页研究",
+    "state_mutation": "状态变更",
+    "safety_recovery": "安全、注入与恢复",
+    "file_data": "文件与数据",
+    "coding_debug": "Coding Agent / Debug",
+}
+
+TRACK_COLORS = ["#10afbe", "#11191b", "#6979db", "#f37860", "#d1df36", "#df5eb9"]
 
 
 def esc(value: object) -> str:
@@ -89,16 +100,23 @@ def build() -> str:
     difficulty = Counter(task["difficulty"] for task in tasks)
     capabilities = Counter(cap for task in tasks for cap in task["capabilities"])
     task_profiles = Counter(task["evaluation_profile"] for task in tasks)
+    tracks = Counter(task["track"] for task in tasks)
     cards = "\n".join(task_card(task) for task in tasks)
-    difficulty_rows = "".join(
-        f"<li><span><i class='{esc(key)}'></i>{esc(DIFFICULTY_LABELS[key])}</span>"
-        f"<strong>{difficulty[key]}</strong></li>"
-        for key in ("atomic", "compositional", "adversarial", "visual", "long_horizon", "debug")
-    )
     capability_rows = "".join(
-        f"<div class='cap-row'><span>{esc(name)}</span><i style='--w:{count / 9 * 100:.1f}%'></i><b>{count}</b></div>"
+        f"<div class='cap-row'><span>{esc(name)}</span><i style='--w:{count / max(capabilities.values()) * 100:.1f}%'></i><b>{count}</b></div>"
         for name, count in capabilities.most_common(12)
     )
+    track_rows = "".join(
+        f"<li><span><i style='background:{TRACK_COLORS[index]}'></i>{esc(TRACK_LABELS[name])}</span><strong>{tracks[name]}</strong></li>"
+        for index, name in enumerate(TRACK_LABELS)
+    )
+    cumulative = 0
+    donut_segments = []
+    for color, name in zip(TRACK_COLORS, TRACK_LABELS, strict=True):
+        start = cumulative
+        cumulative += tracks[name]
+        donut_segments.append(f"{color} {start}% {cumulative}%")
+    donut_background = "conic-gradient(" + ",".join(donut_segments) + ")"
     profile_buttons = "".join(
         f"<button type='button' data-profile-tab='{esc(name)}' aria-selected='{'true' if i == 0 else 'false'}'>"
         f"{esc(PROFILE_LABELS[name])}<small>{task_profiles[name]} 条已使用</small></button>"
@@ -117,8 +135,8 @@ def build() -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="OmniWebBench v0.1 的 24 条可运行测试、36 个能力标签与 5 套评分模型全貌。">
-  <title>OmniWebBench 全貌 · 24 条可运行测试</title>
+  <meta name="description" content="OmniWebBench v0.2 的 100 条可运行测试、六条能力轨道与五套评分模型全貌。">
+  <title>OmniWebBench 全貌 · 100 条可运行测试</title>
   <style>
     :root{{--ink:#0b1012;--muted:#5c676b;--line:#dce3e4;--paper:#f4f6f2;--card:#fff;--cyan:#12b8c8;--cyan2:#8ce3e9;--lime:#c9ff5b;--radius:24px}}
     *{{box-sizing:border-box}} html{{scroll-behavior:smooth}} body{{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}}
@@ -131,7 +149,7 @@ def build() -> str:
     section{{padding:76px 0}} .section-head{{display:grid;grid-template-columns:.7fr 1.3fr;gap:40px;margin-bottom:36px;align-items:start}} .section-head h2{{font-size:clamp(38px,5vw,64px);line-height:.98;letter-spacing:-.055em;margin:0}} .section-head p{{color:var(--muted);font-size:18px;max-width:640px;margin:5px 0 0}} .section-kicker{{font:700 12px/1.2 "SFMono-Regular",monospace;color:#078b98;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}}
     .scope{{background:#e4f9f9;border:1px solid #a8e3e7;border-radius:20px;padding:22px 24px;display:grid;grid-template-columns:auto 1fr;gap:18px;margin-bottom:32px}} .scope b{{font-size:30px}} .scope p{{margin:0;color:#31575b}} .scope strong{{color:var(--ink)}}
     .coverage{{display:grid;grid-template-columns:.85fr 1.15fr;gap:18px}} .panel{{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px}} .panel h3{{margin:0 0 24px;font-size:20px}}
-    .difficulty-chart{{display:grid;grid-template-columns:170px 1fr;gap:26px;align-items:center}} .donut{{width:168px;aspect-ratio:1;border-radius:50%;background:conic-gradient(#10afbe 0 45.833%,#11191b 45.833% 83.333%,#f37860 83.333% 87.5%,#6979db 87.5% 91.666%,#d1df36 91.666% 95.833%,#df5eb9 95.833%);position:relative}} .donut:after{{content:"24\\A TESTS";white-space:pre;display:grid;place-items:center;text-align:center;font-weight:800;line-height:1.1;position:absolute;inset:26px;background:white;border-radius:50%}}
+    .difficulty-chart{{display:grid;grid-template-columns:170px 1fr;gap:26px;align-items:center}} .donut{{width:168px;aspect-ratio:1;border-radius:50%;background:{donut_background};position:relative}} .donut:after{{content:"100\\A TESTS";white-space:pre;display:grid;place-items:center;text-align:center;font-weight:800;line-height:1.1;position:absolute;inset:26px;background:white;border-radius:50%}}
     .legend{{list-style:none;padding:0;margin:0}} .legend li{{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #edf0ef}} .legend span{{display:flex;align-items:center;gap:9px;font-size:13px}} .legend i{{width:9px;height:9px;border-radius:50%;background:#10afbe}} .legend i.compositional{{background:#11191b}} .legend i.adversarial{{background:#f37860}} .legend i.visual{{background:#6979db}} .legend i.long_horizon{{background:#d1df36}} .legend i.debug{{background:#df5eb9}}
     .cap-row{{display:grid;grid-template-columns:160px 1fr 24px;gap:12px;align-items:center;margin:11px 0;font:12px "SFMono-Regular",monospace}} .cap-row>i{{height:7px;border-radius:8px;background:#edf1f0;overflow:hidden}} .cap-row>i:after{{content:"";display:block;width:var(--w);height:100%;background:var(--cyan);border-radius:inherit}} .cap-row b{{text-align:right}}
     .dark{{background:var(--ink);color:white}} .dark .section-head p{{color:#aab4b5}} .pipeline{{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;counter-reset:pipe}} .pipe{{border:1px solid #374043;border-radius:18px;padding:20px;min-height:170px;position:relative}} .pipe:before{{counter-increment:pipe;content:"0" counter(pipe);display:block;font:12px monospace;color:var(--cyan2);margin-bottom:28px}} .pipe h3{{font-size:17px;margin:0 0 8px}} .pipe p{{font-size:13px;color:#aab4b5;margin:0}} .truth{{margin-top:18px;border:1px solid #374043;border-radius:20px;padding:22px;display:flex;gap:28px;align-items:center}} .truth-visual{{width:48%;display:flex;align-items:center;gap:7px}} .truth-visual span{{flex:1;padding:14px 7px;border:1px solid #415053;border-radius:9px;text-align:center;font:10px monospace;color:#d8e0e1}} .truth-visual i{{color:var(--cyan);font-style:normal}} .truth p{{color:#b7c0c1;margin:0;flex:1}} .truth strong{{color:white}}
@@ -146,25 +164,25 @@ def build() -> str:
   </style>
 </head>
 <body>
-  <header class="wrap topbar"><a class="brand" href="#top">OmniWeb<b>Bench</b></a><nav class="nav" aria-label="页面导航"><a href="#coverage">测试构成</a><a href="#scoring">评分</a><a href="#catalog">24 条目录</a><a href="#roadmap">路线图</a></nav></header>
+  <header class="wrap topbar"><a class="brand" href="#top">OmniWeb<b>Bench</b></a><nav class="nav" aria-label="页面导航"><a href="#coverage">测试构成</a><a href="#scoring">评分</a><a href="#catalog">100 条目录</a><a href="#roadmap">路线图</a></nav></header>
   <main id="top">
     <div class="wrap hero">
-      <div class="eyebrow">v0.1 · public developer preview</div>
-      <h1>24 条测试。<br><em>看清一个 Web Agent。</em></h1>
-      <div class="hero-copy"><p>不是让模型“说它做完了”，而是用浏览器事件、最终状态、网络记录和可执行 Oracle，验证它到底做了什么。</p><div class="status-note"><strong>当前口径</strong><br>24 条 = 仓库内已经发布且可以运行的 public dev tests。130 条历史 query 是设计输入，不等于当前测试数。</div></div>
+      <div class="eyebrow">v0.2 · 100-task public developer preview</div>
+      <h1>100 条测试。<br><em>第一阶段，不是终点。</em></h1>
+      <div class="hero-copy"><p>不是让模型“说它做完了”，而是用浏览器事件、最终状态、网络记录和可执行 Oracle，验证它到底做了什么。</p><div class="status-note"><strong>当前口径</strong><br>100 条 = 仓库内已经发布且可以运行的 public dev tests；正式规划目标为 1,000 条。</div></div>
     </div>
     <div class="wrap metrics" aria-label="核心数字">
       <div class="metric"><strong>{len(tasks)}</strong><span>可运行 public dev tests</span></div>
       <div class="metric"><strong>{len(capabilities)}</strong><span>唯一能力标签</span></div>
       <div class="metric"><strong>{len(PROFILES)}</strong><span>差异化评分模型</span></div>
-      <div class="metric"><strong>11</strong><span>自动化回归检查</span></div>
+      <div class="metric"><strong>{len(tracks)}</strong><span>等比例能力轨道</span></div>
     </div>
 
     <section class="wrap" id="coverage">
-      <div class="section-head"><div><div class="section-kicker">01 / Coverage</div><h2>测什么，<br>一眼说清。</h2></div><p>当前版本刻意从“小而硬”的确定性诊断集开始：能复现、能观察、能归因。24 条测试不是 24 个同质网页，而是覆盖基础交互、组合工作流、安全、视觉、长链路与调试的能力切片。</p></div>
-      <div class="scope"><b>24 ≠ 130</b><p><strong>24 条</strong>是今天可以直接运行和计分的基准；原始 130 条真实 query 用于需求归纳与后续扩展。开放网页研究、艺术平台 coding agent、真实站点 verified/test split 在完成审计与校准前，不虚增进当前总数。</p></div>
+      <div class="section-head"><div><div class="section-kicker">01 / Coverage</div><h2>六条轨道，<br>按目标等比例落地。</h2></div><p>v0.2 从原来的 24 条 smoke pack 扩展到 100 条：基础工作流 25、开放研究 18、状态变更 12、安全恢复 15、文件数据 10、Coding/Debug 20。</p></div>
+      <div class="scope"><b>100 / 1,000</b><p><strong>100 条</strong>是当前已经生成、可运行和可计分的第一阶段；原始 130 条真实 query 继续作为母题输入。后续 verified 与隐藏 test split 只有完成审计、重复运行和 baseline 校准后才进入 1,000 条正式目标。</p></div>
       <div class="coverage">
-        <div class="panel"><h3>难度 / 任务形态</h3><div class="difficulty-chart"><div class="donut" role="img" aria-label="24条测试的难度分布"></div><ul class="legend">{difficulty_rows}</ul></div></div>
+        <div class="panel"><h3>六条测试轨道</h3><div class="difficulty-chart"><div class="donut" role="img" aria-label="100条测试的六轨道分布"></div><ul class="legend">{track_rows}</ul></div></div>
         <div class="panel"><h3>出现频率最高的能力标签</h3>{capability_rows}</div>
       </div>
     </section>
@@ -181,18 +199,18 @@ def build() -> str:
     </section>
 
     <section class="wrap" id="catalog">
-      <div class="section-head"><div><div class="section-kicker">04 / Full catalog</div><h2>全部 24 条，<br>没有藏起来。</h2></div><p>搜索 ID、标题、意图或能力标签；也可以按任务形态与评分模型过滤。展开任意卡片，可看到实际 Oracle、期望证据和执行预算。</p></div>
-      <div class="filters"><label><span hidden>搜索测试</span><input id="search" type="search" placeholder="搜索：debug、iframe、safety…"></label><label><span hidden>任务形态</span><select id="difficulty"><option value="">全部任务形态 · 24</option>{difficulty_options}</select></label><label><span hidden>评分模型</span><select id="profile"><option value="">全部评分模型 · 24</option>{profile_options}</select></label></div>
-      <div class="result-line" id="result-count">显示 24 / 24 条测试</div>
+      <div class="section-head"><div><div class="section-kicker">04 / Full catalog</div><h2>全部 100 条，<br>没有藏起来。</h2></div><p>搜索 ID、标题、意图或能力标签；也可以按任务形态与评分模型过滤。展开任意卡片，可看到实际 Oracle、期望证据和执行预算。</p></div>
+      <div class="filters"><label><span hidden>搜索测试</span><input id="search" type="search" placeholder="搜索：debug、research、safety…"></label><label><span hidden>任务形态</span><select id="difficulty"><option value="">全部任务形态 · 100</option>{difficulty_options}</select></label><label><span hidden>评分模型</span><select id="profile"><option value="">全部评分模型 · 100</option>{profile_options}</select></label></div>
+      <div class="result-line" id="result-count">显示 100 / 100 条测试</div>
       <div class="task-grid">{cards}</div>
     </section>
 
     <section class="wrap" id="roadmap">
       <div class="section-head"><div><div class="section-kicker">05 / Boundary</div><h2>现在有的，<br>和接下来要做的。</h2></div><p>“测试数量”必须绑定可运行状态。路线图里的任务只有经过环境固化、Oracle 审核、重复运行和 baseline 校准后，才会进入正式总数。</p></div>
-      <div class="roadmap"><article class="current"><small>shipped · counted</small><h3>v0.1 当前 24 条</h3><ul><li>确定性本地 fixture</li><li>24 条任务全部 human + oracle verified</li><li>基础交互、组合、安全、视觉、长链路</li><li>1 条浏览器网络诊断专项</li><li>JSON Schema、scorer、report 与 CI</li></ul></article><article class="future"><small>planned · not counted</small><h3>后续扩展轨道</h3><ul><li>开放网页研究与 GitHub 约束检索</li><li>艺术平台 coding agent：搜网页 → 进页面 → 调试 → 修复</li><li>截图 / 参考风格到可运行作品的视觉还原</li><li>真实站点 verified 与隐藏 test split</li><li>多模型 baseline、重复运行与排行榜治理</li></ul></article></div>
+      <div class="roadmap"><article class="current"><small>shipped · counted</small><h3>v0.2 当前 100 条</h3><ul><li>六轨道严格按 25 / 18 / 12 / 15 / 10 / 20 配额</li><li>100 条任务全部具备确定性 Oracle</li><li>17 条专用研究任务与 20 条 Coding/Debug 任务</li><li>保留原始 24 条 v0.1 pack 供回归比较</li><li>JSON Schema、scorer、fixture、report 与 CI</li></ul></article><article class="future"><small>target · not counted</small><h3>正式目标 1,000 条</h3><ul><li>Public dev 300 条</li><li>Verified 200 条</li><li>Hidden test 500 条</li><li>真实网站、容器化代码仓与视觉参考输入</li><li>多模型 baseline、重复运行与排行榜治理</li></ul></article></div>
     </section>
   </main>
-  <footer class="wrap"><div><b>OmniWebBench v0.1.0</b><br>数据由 tasks/core-v0.1.jsonl 生成，避免文档与基准漂移。</div><div><a href="https://github.com/FanXuTheRealOne/OmniWebBench">GitHub repository ↗</a><br>Task data CC BY 4.0 · Code Apache 2.0</div></footer>
+  <footer class="wrap"><div><b>OmniWebBench v0.2.0</b><br>数据由 tasks/core-v0.2.jsonl 生成，避免文档与基准漂移。</div><div><a href="https://github.com/FanXuTheRealOne/OmniWebBench">GitHub repository ↗</a><br>Task data CC BY 4.0 · Code Apache 2.0</div></footer>
   <script>
     const profiles = {profile_payload()};
     const tabs = [...document.querySelectorAll('[data-profile-tab]')];

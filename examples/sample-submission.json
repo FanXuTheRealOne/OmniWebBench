@@ -1,9 +1,9 @@
 {
   "schema_version": "omniwebbench.submission.v1",
-  "benchmark_version": "0.1.0",
+  "benchmark_version": "0.2.0",
   "agent": {
     "name": "reference-browser-agent",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "model": "example-model",
     "scaffold": "example-scaffold",
     "observation_mode": "accessibility_tree+screenshot",

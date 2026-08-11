@@ -14,7 +14,7 @@ def _json(path: str) -> dict:
 
 def test_task_pack_matches_public_json_schema() -> None:
     validator = Draft202012Validator(_json("schemas/task.schema.json"))
-    for line in (ROOT / "tasks/core-v0.1.jsonl").read_text(encoding="utf-8").splitlines():
+    for line in (ROOT / "tasks/core-v0.2.jsonl").read_text(encoding="utf-8").splitlines():
         validator.validate(json.loads(line))
 
 

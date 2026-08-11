@@ -12,6 +12,8 @@
 
 ## v0.2 — verified diagnostic split
 
+- [x] 100 deterministic tasks across six tracks
+- [x] 20-task Coding Agent / browser-debugging track
 - [ ] Two independent reviewers per task
 - [ ] Oracle mutation testing tool
 - [ ] Signed fixture event receipts

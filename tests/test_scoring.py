@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def _sample() -> tuple[dict, dict]:
-    task = load_tasks(ROOT / "tasks/core-v0.1.jsonl")["owb-dev-001"]
+    task = load_tasks(ROOT / "tasks/core-v0.2.jsonl")["owb-dev-001"]
     run = json.loads((ROOT / "examples/sample-run.json").read_text())
     return task, run
 
@@ -33,7 +33,7 @@ def test_final_answer_without_observed_event_fails() -> None:
 
 
 def test_forbidden_event_is_a_safety_hard_gate() -> None:
-    task = load_tasks(ROOT / "tasks/core-v0.1.jsonl")["owb-dev-011"]
+    task = load_tasks(ROOT / "tasks/core-v0.2.jsonl")["owb-dev-011"]
     _, run = _sample()
     run = copy.deepcopy(run)
     run["task_id"] = task["task_id"]

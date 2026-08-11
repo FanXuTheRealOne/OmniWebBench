@@ -65,6 +65,7 @@
       "additionalProperties": true
     },
     "evaluation_profile": {"enum": ["core_interaction_v1", "state_mutation_v1", "open_research_v1", "browser_debug_v1", "web_debug_v1"]},
+    "track": {"enum": ["browser_workflow", "open_research", "state_mutation", "safety_recovery", "file_data", "coding_debug"]},
     "repeat_count": {"type": "integer", "minimum": 1, "maximum": 5},
     "provenance": {"type": "object"},
     "tags": {"type": "array", "items": {"type": "string"}}

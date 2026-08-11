@@ -1,6 +1,6 @@
 # Task packs
 
-`core-v0.1.jsonl` is the public 24-task deterministic development pack. It is generated from `omniwebbench.task_factory` and checked into source control so agents can be integrated without executing generation code.
+`core-v0.2.jsonl` is the current public 100-task deterministic development pack. It is generated from `omniwebbench.task_factory` and checked into source control so agents can be integrated without executing generation code. `core-v0.1.jsonl` remains the immutable 24-task regression pack.
 
 ## Split semantics
 
@@ -15,7 +15,7 @@ Public dev results must not be described as official test results. Task IDs rema
 
 ```bash
 python scripts/generate_dev_tasks.py
-git diff --exit-code -- tasks/core-v0.1.jsonl
+git diff --exit-code -- tasks/core-v0.1.jsonl tasks/core-v0.2.jsonl
 ```
 
 No proprietary query, customer prompt, credential or private dataset is included in this task pack.

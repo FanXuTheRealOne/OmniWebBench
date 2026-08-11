@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use OmniWebBench, cite this software release."
 title: "OmniWebBench: A capability-first benchmark for general-purpose web agents"
 type: software
-version: 0.1.0
+version: 0.2.0
 date-released: 2026-08-11
 authors:
   - family-names: Xu

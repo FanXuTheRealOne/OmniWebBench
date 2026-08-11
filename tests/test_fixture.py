@@ -10,6 +10,7 @@ from urllib.request import Request, urlopen
 import pytest
 
 from omniwebbench.fixture import LAB_HTML, FixtureHandler
+from omniwebbench.task_factory import BLUEPRINTS
 
 
 def test_fixture_javascript_parses() -> None:
@@ -49,6 +50,38 @@ def test_fixture_serves_tasks_and_records_observed_events() -> None:
             events = json.load(response)["events"]
             assert events[0]["name"] == "primary-clicked"
             assert events[0]["sequence"] == 1
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+
+def test_fixture_serves_every_blueprint_family() -> None:
+    server = ThreadingHTTPServer(("127.0.0.1", 0), FixtureHandler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    origin = f"http://127.0.0.1:{server.server_port}"
+    expected_uis = {
+        "workflow_form",
+        "research_board",
+        "state_form",
+        "safety_panel",
+        "artifact_case",
+        "debug_case",
+        "patch_case",
+    }
+    try:
+        seen = set()
+        for index, blueprint in enumerate(BLUEPRINTS, start=1):
+            with urlopen(
+                f"{origin}/lab?task_id=owb-dev-{index:03d}&run_id=family-{index}"
+            ) as response:
+                body = response.read().decode()
+                assert response.status == 200
+                assert blueprint["title"] in body
+                assert f'"ui": "{blueprint["ui"]}"' in body
+                seen.add(blueprint["ui"])
+        assert expected_uis <= seen
     finally:
         server.shutdown()
         server.server_close()

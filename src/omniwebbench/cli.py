@@ -13,7 +13,7 @@ from omniwebbench.loader import ValidationError, load_runs, load_tasks
 from omniwebbench.report import write_html_report, write_json_report
 from omniwebbench.scoring import PROFILES, score_run
 
-DEFAULT_TASKS = Path(__file__).resolve().parents[2] / "tasks/core-v0.1.jsonl"
+DEFAULT_TASKS = Path(__file__).resolve().parents[2] / "tasks/core-v0.2.jsonl"
 
 
 def _tasks(path: str | Path | None) -> dict:

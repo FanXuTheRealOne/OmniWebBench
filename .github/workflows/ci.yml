@@ -28,7 +28,7 @@ jobs:
       - name: Verify generated task pack
         run: |
           python scripts/generate_dev_tasks.py
-          git diff --exit-code -- tasks/core-v0.1.jsonl
+          git diff --exit-code -- tasks/core-v0.1.jsonl tasks/core-v0.2.jsonl
       - run: ruff check .
       - run: ruff format --check .
       - run: pytest
@@ -36,7 +36,7 @@ jobs:
       - name: CLI smoke test
         run: |
           omniwebbench doctor
-          omniwebbench validate tasks/core-v0.1.jsonl
+          omniwebbench validate tasks/core-v0.2.jsonl
           omniwebbench score examples/sample-run.json --output /tmp/score.json
           omniwebbench report examples/sample-run.json --output-dir /tmp/report
           test -s /tmp/report/index.html
